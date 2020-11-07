@@ -1,25 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import Chance from 'chance'
+import { Cards } from 'react-responsive-cards'
+import CardActions from '@material-ui/core/CardActions';
+import IconButton from '@material-ui/core/IconButton';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share'
+
+const chance = new Chance()
 
 function App() {
+  const renderFooter = title => {
+    const handleOnClick = () => alert(title)
+    return (
+      <CardActions>
+        <IconButton aria-label="add to favorites" onClick={handleOnClick}>
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="add to favorites" onClick={handleOnClick}>
+          <ShareIcon />
+        </IconButton>
+      </CardActions>
+    )
+  }
+
+  const generateCardDetails = chance.n(() => {
+    const title = chance.name();
+
+    return {
+      title,
+      description: chance.paragraph(),
+      image: `https://picsum.photos/500/500?images=${chance.natural({ min: 1, max: 100 })}`,
+      renderFooter: renderFooter(title),
+      handleOnClick: () => alert(title)
+    }
+  }, 24)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Cards details={generateCardDetails}/>
+  )
 }
 
 export default App;
